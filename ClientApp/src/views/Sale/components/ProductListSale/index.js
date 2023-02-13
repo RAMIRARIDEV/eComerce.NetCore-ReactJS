@@ -1,13 +1,12 @@
 import { Col, Row ,Table } from "reactstrap";
 import ProductListItem from "../ProductListItemSale"
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
 
 import SaleContext from "../../../../context/Sale"
 
 const ProductsGrid = () => {
 
     const {getSale} = useContext(SaleContext)
-
     return (
      <Row>
         <Col sm={12}>

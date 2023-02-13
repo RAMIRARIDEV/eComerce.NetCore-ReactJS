@@ -1,7 +1,7 @@
 import { CardHeader } from "reactstrap"
 
 
-const Title = ({text}) =>{
+const SectionTitle = ({text}) =>{
 
     return (
     <CardHeader style={{ backgroundColor: '#4e73df', color: "white" }}>
@@ -10,5 +10,4 @@ const Title = ({text}) =>{
     );
 }
 
-export default Title;
-
+export default SectionTitle;

@@ -1,11 +1,11 @@
-﻿import { Card, CardBody, CardHeader, Col, Row, Button } from "reactstrap";
+﻿import { Card, CardBody, CardHeader, Col, Row } from "reactstrap";
 import "./css/Venta.css"
 import SearchProduct from "./Product/components/SearchProduct"
 import ProductListSale from "./Sale/components/ProductListSale"
 import SaleProvider from '../context/Sale/Provider';
 import TotalSale from './Sale/components/TotalSale'
 import CompleteSaleButton from "../views/Sale/components/CompleteSaleButton"
-import Title from '../views/Product/components/ProductTitle'
+import SectionTitle from '../views/Shared/SectionTitle'
 
 
 const Sale = () => {
@@ -43,7 +43,7 @@ const Sale = () => {
                     <Row>
                         <Col sm={12}>
                             <Card>
-                                <Title text={"Productos"}/>
+                                <SectionTitle text={"Productos"}/>
                                 <CardBody>
                                     <SearchProduct />
                                     <ProductListSale />
