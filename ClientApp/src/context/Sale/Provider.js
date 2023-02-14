@@ -8,7 +8,7 @@ const SaleProvider = ({children}) => {
 
     const [sale, setSale] = useState([])
     const [a_Busqueda, setA_Busqueda] = useState("")
-    const [a_Products, setA_Products] = useState([])
+    const [a_ProductsSale, setA_ProductsSale] = useState([])
 
     const [documentType,setDocumentType] = useState("Boleta")
     const [clientDocument,setClientDocument] = useState("")
@@ -31,12 +31,10 @@ const SaleProvider = ({children}) => {
     const getTotal = () => total
     const getSubTotal = () => subTotal
     const getIGV = () => igv
-
     const getSale = () => sale
+    const getProducts = () => a_ProductsSale
 
-    const getProducts = () => a_Products
-
-    const sugerenciaSeleccionada = (event, { suggestion, suggestionValue, suggestionIndex, sectionIndex, method }) => {
+    const sugestionSelectedSale = (event, { suggestion, suggestionValue, suggestionIndex, sectionIndex, method }) => {
 
         Swal.fire({
             title: suggestion.marca + " - " + suggestion.descripcion,
@@ -115,40 +113,31 @@ const SaleProvider = ({children}) => {
     }
 
     //funcion que nos permite borrar las sugerencias
-    const onSuggestionsClearRequested = () => {
-        setA_Products([])
+    const onSuggestionsClearRequestedSale = () => {
+        setA_ProductsSale([])
     }
 
     //para obtener la lista de sugerencias
-    const onSuggestionsFetchRequested = ({ value }) => {
+    const onSuggestionsFetchRequestedSale = ({ value }) => {
 
         const api = fetch("api/venta/Productos/" + value)
             .then((response) => {
                 return response.ok ? response.json() : Promise.reject(response);
             })
             .then((dataJson) => {
-                setA_Products(dataJson)
+                setA_ProductsSale(dataJson)
             }).catch((error) => {
                 console.log("No se pudo obtener datos, mayor detalle: ", error)
             })
-        
     }
 
-    const renderSuggestion = (sugerencia) => (
-        <span>
-               {sugerencia.codigo + " - " + sugerencia.marca + " - " + sugerencia.descripcion}
-        </span>
-       )
 
-    const inputProps = {
+    const inputPropsSale = {
            placeholder: "Buscar producto",
            value: a_Busqueda,
            onChange
     }
 
-    const getSuggestionValue = (sugerencia) => {
-        return sugerencia.codigo + " - " + sugerencia.marca + " - " + sugerencia.descripcion
-    }
 
     const onClean = () => {
         setDocumentType("Boleta")
@@ -158,6 +147,7 @@ const SaleProvider = ({children}) => {
         setIgv(0)
     }
 
+    
 
   
     const onCompleteSale = () => {
@@ -216,13 +206,11 @@ const SaleProvider = ({children}) => {
         <SaleContext.Provider value={{
          onRemoveProduct, 
          getSale,
-         sugerenciaSeleccionada,
+         sugestionSelectedSale,
          calcularTotal,
-         onSuggestionsClearRequested,
-         onSuggestionsFetchRequested,
-         renderSuggestion,
-         getSuggestionValue,
-         inputProps,
+         onSuggestionsClearRequestedSale,
+         onSuggestionsFetchRequestedSale,
+         inputPropsSale,
          getProducts,
          getTotal,
          getIGV,
@@ -230,7 +218,8 @@ const SaleProvider = ({children}) => {
          getDocumentType,
          setDocumentType,
          onClean,
-         onCompleteSale
+         onCompleteSale,
+         a_ProductsSale
          }}>
             {children}
         </SaleContext.Provider>

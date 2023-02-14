@@ -2,16 +2,20 @@
 import "./css/Venta.css"
 import SearchProduct from "./Product/components/SearchProduct"
 import ProductListSale from "./Sale/components/ProductListSale"
-import SaleProvider from '../context/Sale/Provider';
+import StockProvider from '../context/Stock/Provider';
 import TotalSale from './Sale/components/TotalSale'
 import CompleteSaleButton from "../views/Sale/components/CompleteSaleButton"
 import SectionTitle from '../views/Shared/SectionTitle'
+import SaleProvider from "../context/Sale/Provider";
+import ProductProvider from "../context/Product/Provider";
 
 
 const Sale = () => {
 
     return (
-        <SaleProvider>
+        <ProductProvider>
+        <StockProvider>
+            <SaleProvider>
             <Row>
                 <Col sm={8}>
 
@@ -45,7 +49,7 @@ const Sale = () => {
                             <Card>
                                 <SectionTitle text={"Productos"}/>
                                 <CardBody>
-                                    <SearchProduct />
+                                     <SearchProduct isSale={true}/>
                                     <ProductListSale />
                                 </CardBody>
                             </Card>
@@ -77,7 +81,9 @@ const Sale = () => {
                     </Row>
                 </Col>
             </Row>
-        </SaleProvider>
+            </SaleProvider>
+        </StockProvider>
+        </ProductProvider>
 
     )
 }

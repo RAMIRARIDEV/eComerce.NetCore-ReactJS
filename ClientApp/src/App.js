@@ -4,7 +4,6 @@ import NavBar from './views/Shared/NavBar'
 import { Link } from 'react-router-dom';
 import { UserContext } from './context/UserProvider';
 import Swal from 'sweetalert2'
-import { useState } from 'react';
 
 const modelo = {
     nombre: "",

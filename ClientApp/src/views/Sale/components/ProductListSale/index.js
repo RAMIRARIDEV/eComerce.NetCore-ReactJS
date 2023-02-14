@@ -1,6 +1,6 @@
 import { Col, Row ,Table } from "reactstrap";
 import ProductListItem from "../ProductListItemSale"
-import React, { useContext, useEffect } from 'react'
+import React, { useContext } from 'react'
 
 import SaleContext from "../../../../context/Sale"
 

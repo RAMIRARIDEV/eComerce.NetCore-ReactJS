@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext } from "react"
+import { useState, useEffect } from "react"
 import ProductContext from "../Product"
 import {Button } from "reactstrap"
 import Swal from 'sweetalert2'
@@ -24,6 +24,7 @@ const ProductProvider = ({children}) => {
     const [a_Products, setA_Products] = useState([])
 
 
+
     const cleanSearch = () => {
         setA_Busqueda("");
     }
@@ -35,12 +36,12 @@ const ProductProvider = ({children}) => {
     }
 
     //funcion que nos permite borrar las sugerencias
-    const onSuggestionsClearRequested = () => {
+    const onSuggestionsClearRequestedProduct = () => {
         setA_Products([])
     }
 
     //para obtener la lista de sugerencias
-    const onSuggestionsFetchRequested = ({ value }) => {
+    const onSuggestionsFetchRequestedProduct = ({ value }) => {
 
         const api = fetch("api/venta/Productos/" + value)
             .then((response) => {
@@ -51,22 +52,21 @@ const ProductProvider = ({children}) => {
             }).catch((error) => {
                 console.log("No se pudo obtener datos, mayor detalle: ", error)
             })
-        
     }
 
-    const renderSuggestion = (sugerencia) => (
+    const renderSuggestionProduct = (sugerencia) => (
         <span>
                {sugerencia.codigo + " - " + sugerencia.marca + " - " + sugerencia.descripcion}
         </span>
        )
 
-    const inputProps = {
+    const inputPropsProduct = {
            placeholder: "Buscar producto",
            value: a_Busqueda,
            onChange
     }
 
-    const getSuggestionValue = (sugerencia) => {
+    const getSuggestionValueProduct = (sugerencia) => {
         return sugerencia.codigo + " - " + sugerencia.marca + " - " + sugerencia.descripcion
     }
 
@@ -287,6 +287,7 @@ const ProductProvider = ({children}) => {
 
     }
 
+    
 
     return (
         <ProductContext.Provider value={{
@@ -303,14 +304,13 @@ const ProductProvider = ({children}) => {
              categories,
              saveChanges,
              closeModal,
-             onSuggestionsFetchRequested,
-             onSuggestionsClearRequested,
-             renderSuggestion,
-             inputProps,
-             getSuggestionValue,
+             onSuggestionsFetchRequestedProduct,
+             onSuggestionsClearRequestedProduct,
+             renderSuggestionProduct,
+             inputPropsProduct,
+             getSuggestionValueProduct,
              a_Products,
-             cleanSearch
-             
+             cleanSearch             
              }}>
             {children}
         </ProductContext.Provider>

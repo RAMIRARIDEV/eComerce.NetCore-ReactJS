@@ -13,7 +13,7 @@ const ProducList = () => {
         data={productsList}
         progressPending={pending}
         paginationComponentOptions={paginationComponentOptions}
-        customStyles={ customStyles}
+        customStyles={customStyles}
         />
     );
 
