@@ -1,48 +1,94 @@
 ﻿import { Col, FormGroup, Row } from "reactstrap";
 import Autosuggest from 'react-autosuggest';
 import { useContext, useEffect, useState } from "react";
-
 import SaleContext from '../../../../context/Sale'
-import StockContext from '../../../../context/Stock'
 import ProductContext from "../../../../context/Product";
+import { useLocation } from "react-router-dom";
 
-const SearchProduct = (isSale, isStock) =>
-{
+const SearchProduct = () => {
 
-    const {onSuggestionsFetchRequestedSale,
-            onSuggestionsClearRequestedSale,
-            inputPropsSale,
-            sugestionSelectedSale,
-            a_ProductsSale
-        } = useContext(SaleContext)
+    const { onSuggestionsFetchRequestedSale,
+        onSuggestionsClearRequestedSale,
+        inputPropsSale,
+        sugestionSelectedSale,
+        a_ProductsSale
+    } = useContext(SaleContext)
 
-        const {onSuggestionsFetchRequestedProduct,
-            onSuggestionsClearRequestedProduct,
-            getSuggestionValueProduct,
-            renderSuggestionProduct,
-            inputPropsProduct,
-            a_Products
-        } = useContext(ProductContext)
+    const { onSuggestionsFetchRequestedProduct,
+        onSuggestionsClearRequestedProduct,
+        getSuggestionValueProduct,
+        renderSuggestionProduct,
+        inputPropsProduct,
+        a_Products,
+        sugestionSelectedStock,
+        cleanSearch,
+        search
+    } = useContext(ProductContext)
 
-        const {sugestionSelectedProduct} = useContext(StockContext)
+    let location = useLocation();
+    const [state, setState] = useState({
+        suggestions: null,
+        onSuggestionsFetchRequested: null,
+        onSuggestionsClearRequested: null,
+        getSuggestionValue: null,
+        renderSuggestion: null,
+        inputProps: null,
+        onSuggestionSelected: null
+    });
 
-    return (
-        <Row className="mb-2">
-            <Col sm={12}>
-                <FormGroup>
-                    <Autosuggest
-                        suggestions={isSale ? a_ProductsSale : isStock ? a_Products : undefined}
-                        onSuggestionsFetchRequested={isSale ? onSuggestionsFetchRequestedSale:  isStock ? onSuggestionsFetchRequestedProduct : undefined}
-                        onSuggestionsClearRequested={isSale ? onSuggestionsClearRequestedSale:  isStock ? onSuggestionsClearRequestedProduct : undefined}
-                        getSuggestionValue={getSuggestionValueProduct}
-                        renderSuggestion={renderSuggestionProduct}
-                        inputProps={isSale ? inputPropsSale :  isStock ? inputPropsProduct : undefined}
-                        onSuggestionSelected={isSale ? sugestionSelectedSale :  isStock ? sugestionSelectedProduct  : undefined} 
-                    />
-                </FormGroup>
-            </Col>
-        </Row>
+    useEffect(() => {
+        switch (location.pathname) {
+            case "/cargaStock": setState({
+                suggestions: a_Products,
+                onSuggestionsFetchRequested: onSuggestionsFetchRequestedProduct,
+                onSuggestionsClearRequested: onSuggestionsClearRequestedProduct,
+                getSuggestionValue: getSuggestionValueProduct,
+                renderSuggestion: renderSuggestionProduct,
+                inputProps: inputPropsProduct,
+                onSuggestionSelected: sugestionSelectedStock
+            });
+                break;
+            case "/venta": setState({
+                suggestions: a_ProductsSale,
+                onSuggestionsFetchRequested: onSuggestionsFetchRequestedSale,
+                onSuggestionsClearRequested: onSuggestionsClearRequestedSale,
+                getSuggestionValue: getSuggestionValueProduct,
+                renderSuggestion: renderSuggestionProduct,
+                inputProps: inputPropsSale,
+                onSuggestionSelected: sugestionSelectedSale
+            }); break;
+            default: setState({
+                suggestions: null,
+                onSuggestionsFetchRequested: null,
+                onSuggestionsClearRequested: null,
+                getSuggestionValue: null,
+                renderSuggestion: null,
+                inputProps: null,
+                onSuggestionSelected: null
+            })
+        }
+
+    }, [location.pathname, a_ProductsSale, a_Products,search])
+
+    if (state.suggestions) {
+        return (
+            <Row className="mb-2">
+                <Col sm={12}>
+                    <FormGroup>
+                        <Autosuggest
+                            suggestions={state.suggestions}
+                            onSuggestionsFetchRequested={state.onSuggestionsFetchRequested}
+                            onSuggestionsClearRequested={state.onSuggestionsClearRequested}
+                            getSuggestionValue={state.getSuggestionValue}
+                            renderSuggestion={state.renderSuggestion}
+                            inputProps={state.inputProps}
+                            onSuggestionSelected={state.onSuggestionSelected}
+                        />
+                    </FormGroup>
+                </Col>
+            </Row>
         );
+    }
 }
 
 

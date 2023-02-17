@@ -20,19 +20,20 @@ const ProductProvider = ({children}) => {
     const [productsList, setProductsList] = useState([]);
     const [categories, setCategories] = useState([]);
     const [viewModal, setViewModal] = useState(false);
-    const [a_Busqueda, setA_Busqueda] = useState("")
+    const [search, setSearch] = useState("")
     const [a_Products, setA_Products] = useState([])
+    const [stockList, setStockList] = useState([])
 
 
 
     const cleanSearch = () => {
-        setA_Busqueda("");
+        setSearch("");
     }
 
 
        //evento cuando cambie el valor del texto de busqueda
        const onChange = (e, { newValue }) => {
-        setA_Busqueda(newValue)
+        setSearch(newValue)
     }
 
     //funcion que nos permite borrar las sugerencias
@@ -62,7 +63,7 @@ const ProductProvider = ({children}) => {
 
     const inputPropsProduct = {
            placeholder: "Buscar producto",
-           value: a_Busqueda,
+           value: search,
            onChange
     }
 
@@ -167,7 +168,7 @@ const ProductProvider = ({children}) => {
         }
     };
     
-    const columns = [
+    const columnsProduct = [
         {
             name: 'Codigo',
             selector: row => row.codigo,
@@ -220,6 +221,37 @@ const ProductProvider = ({children}) => {
             ),
         },
     ];
+
+    const columnsStock = [
+        {
+            name: 'Codigo',
+            selector: row => row.idProducto,
+            sortable: true,
+        },
+        {
+            name: 'Descripcion',
+            selector: row => row.descripcion,
+            sortable: true,
+        },
+        {
+            name: 'Cantidad',
+            selector: row => row.cantidad,
+            sortable: true,
+        },
+        {
+            name: 'Eliminar',
+            cell: row => (
+                <>
+
+                    <Button color="danger" size="sm"
+                         onClick={() => deleteProduct(row.idProducto)}
+                    >
+                        <i className="fas fa-trash-alt"></i>
+                    </Button>
+                </>
+            ),
+        },
+    ] 
 
     const handleChange = (e) => {
 
@@ -287,15 +319,57 @@ const ProductProvider = ({children}) => {
 
     }
 
-    
+    const sugestionSelectedStock = (event, { suggestion, suggestionValue, suggestionIndex, sectionIndex, method }) => {
+
+        Swal.fire({
+            title: suggestion.marca + " - " + suggestion.descripcion,
+            text: "Ingrese la cantidad de Stock",
+            input: 'text',
+            inputAttributes: {
+                autocapitalize: 'off'
+            },
+            showCancelButton: true,
+            confirmButtonText: 'Aceptar',
+            cancelButtonText: 'Volver',
+            showLoaderOnConfirm: true,
+            preConfirm: (inputValue) => {
+                if (isNaN(parseFloat(inputValue))) {
+                    Swal.showValidationMessage(
+                        "Debe ingresar un valor númerico"
+                    )
+                } else {
+                    let item = {
+                        idProducto: suggestion.idProducto,
+                        descripcion: suggestion.marca + " " + suggestion.descripcion,
+                        cantidad: parseInt(inputValue),
+                        precio: suggestion.precioCompra,
+                        total: suggestion.precioCompra * parseFloat(inputValue)
+                    }
+                    setStockList((last) => [...last, item])
+                    console.log(stockList)
+                }
+            },
+            allowOutsideClick: () => !Swal.isLoading()
+        }).then((result) => {
+            if (result.isConfirmed) {
+                setSearch("")
+            } else {
+                setSearch("")
+            }
+        })
+    }
+
+
 
     return (
         <ProductContext.Provider value={{
              productsList,
+             stockList,
              pending,
              paginationComponentOptions,
              modelProduct,
-             columns,
+             columnsProduct,
+             columnsStock,
              customStyles,
              openEditModal,
              viewModal,
@@ -310,7 +384,9 @@ const ProductProvider = ({children}) => {
              inputPropsProduct,
              getSuggestionValueProduct,
              a_Products,
-             cleanSearch             
+             cleanSearch,
+             search,
+             sugestionSelectedStock      
              }}>
             {children}
         </ProductContext.Provider>
