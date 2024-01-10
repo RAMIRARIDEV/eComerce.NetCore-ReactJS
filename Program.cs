@@ -1,5 +1,8 @@
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using ReactVentas.Models;
+
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -8,6 +11,9 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<DBREACT_VENTAContext>(options => {
     options.UseSqlServer(builder.Configuration.GetConnectionString("cadenaSQL"));
 });
+
+builder.Services.AddSingleton<IValidator<Categoria>, CategoriaValidator>();
+builder.Services.AddSingleton<IValidator<Producto>, ProductoValidator>();
 
 builder.Services.AddControllers().AddJsonOptions(option =>
 {

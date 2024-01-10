@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace ReactVentas.Models
 {
@@ -19,7 +16,7 @@ namespace ReactVentas.Models
         public virtual DbSet<Categoria> Categoria { get; set; } = null!;
         public virtual DbSet<DetalleVenta> DetalleVenta { get; set; } = null!;
         public virtual DbSet<NumeroDocumento> NumeroDocumentos { get; set; } = null!;
-        public virtual DbSet<DtoProducto> Productos { get; set; } = null!;
+        public virtual DbSet<Producto> Productos { get; set; } = null!;
         public virtual DbSet<Rol> Rols { get; set; } = null!;
         public virtual DbSet<Usuario> Usuarios { get; set; } = null!;
         public virtual DbSet<Venta> Venta { get; set; } = null!;
@@ -97,7 +94,7 @@ namespace ReactVentas.Models
                     .HasDefaultValueSql("(getdate())");
             });
 
-            modelBuilder.Entity<DtoProducto>(entity =>
+            modelBuilder.Entity<Producto>(entity =>
             {
                 entity.HasKey(e => e.IdProducto)
                     .HasName("PK__Producto__07F4A132B3DE1441");

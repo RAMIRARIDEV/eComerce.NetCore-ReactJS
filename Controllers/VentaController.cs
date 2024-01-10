@@ -44,7 +44,7 @@ namespace ReactVentas.Controllers
 
                 return StatusCode(StatusCodes.Status200OK, lista);
             }
-            catch (Exception ex)
+            catch (Exception )
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, lista);
             }
@@ -88,9 +88,8 @@ namespace ReactVentas.Controllers
 
                 return StatusCode(StatusCodes.Status200OK, new { numeroDocumento = numeroDocumento });
             }
-            catch (Exception ex) {
+            catch (Exception) {
 
-                var str = ex.Message;
                 return StatusCode(StatusCodes.Status500InternalServerError, new { numeroDocumento = "" });
             }
 
@@ -167,8 +166,7 @@ namespace ReactVentas.Controllers
 
                 return StatusCode(StatusCodes.Status200OK, lista_venta);
             }
-            catch (Exception ex) {
-                var str = ex.Message;
+            catch (Exception) {
                 return StatusCode(StatusCodes.Status500InternalServerError, lista_venta);
             }
             
@@ -182,13 +180,13 @@ namespace ReactVentas.Controllers
             string fechaInicio = HttpContext.Request.Query["fechaInicio"];
             string fechaFin = HttpContext.Request.Query["fechaFin"];
 
-            DateTime _fechainicio = DateTime.ParseExact(fechaInicio, "dd/MM/yyyy", CultureInfo.CreateSpecificCulture("es-PE"));
-            DateTime _fechafin = DateTime.ParseExact(fechaFin, "dd/MM/yyyy", CultureInfo.CreateSpecificCulture("es-PE"));
+            DateTime _fechainicio = DateTime.ParseExact(fechaInicio, "dd/MM/yyyy", CultureInfo.CreateSpecificCulture("es-AR"));
+            DateTime _fechafin = DateTime.ParseExact(fechaFin, "dd/MM/yyyy", CultureInfo.CreateSpecificCulture("es-AR"));
 
             List<DtoReporteVenta> lista_venta = new List<DtoReporteVenta>();
             try
             {
-                lista_venta = (from v in _context.Venta
+                lista_venta =  (from v in _context.Venta
                                join d in _context.DetalleVenta on v.IdVenta equals d.IdVenta
                                join p in _context.Productos on d.IdProducto equals p.IdProducto
                                where v.FechaRegistro.Value.Date >= _fechainicio.Date && v.FechaRegistro.Value.Date <= _fechafin.Date
@@ -212,9 +210,8 @@ namespace ReactVentas.Controllers
 
                 return StatusCode(StatusCodes.Status200OK, lista_venta);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                var str = ex.Message;
                 return StatusCode(StatusCodes.Status500InternalServerError, lista_venta);
             }
 
