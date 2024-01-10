@@ -49,11 +49,13 @@ namespace ReactVentas.Controllers
 
                 return StatusCode(StatusCodes.Status200OK, config);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, config);
             }
         }
+
+
 
     }
 }

@@ -1,11 +1,12 @@
-﻿using System;
+﻿using FluentValidation;
+using System;
 using System.Collections.Generic;
 
 namespace ReactVentas.Models
 {
-    public partial class DtoProducto
+    public partial class Producto
     {
-        public DtoProducto()
+        public Producto()
         {
             DetalleVenta = new HashSet<DetalleVenta>();
         }
@@ -25,5 +26,15 @@ namespace ReactVentas.Models
 
         public virtual Categoria? IdCategoriaNavigation { get; set; }
         public virtual ICollection<DetalleVenta> DetalleVenta { get; set; }
+    }
+
+    public class ProductoValidator : AbstractValidator<Producto>
+    {
+        public ProductoValidator()
+        {
+            RuleFor(x => x.EsActivo).Equal(true);
+            RuleFor(x => x.codigoBarra).NotEmpty();
+            RuleFor(x => x.IdProducto).GreaterThan(1);
+        }
     }
 }
