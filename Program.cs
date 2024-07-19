@@ -1,40 +1,27 @@
-using FluentValidation;
-using Microsoft.EntityFrameworkCore;
-using ReactVentas.Models;
+using DotNetEnv;
+using Carter;
+using IoContainer;
 
+Env.Load();
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
-var builder = WebApplication.CreateBuilder(args);
+IoC.AddServices(builder.Services, builder.Configuration);
 
-// Add services to the container.
+WebApplication app = builder.Build();
 
-builder.Services.AddControllersWithViews();
-builder.Services.AddDbContext<DBREACT_VENTAContext>(options => {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("cadenaSQL"));
-});
-
-builder.Services.AddSingleton<IValidator<Categoria>, CategoriaValidator>();
-builder.Services.AddSingleton<IValidator<Producto>, ProductoValidator>();
-
-builder.Services.AddControllers().AddJsonOptions(option =>
+if (app.Environment.IsDevelopment())
 {
-    option.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
-});
-
-var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-if (!app.Environment.IsDevelopment())
-{
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
+app.UseCors(x=> x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+app.UseHttpsRedirection();
+//app.UseDefaultFiles();
+app.UseStaticFiles();
+
 app.UseRouting();
-
-
-
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller}/{action=Index}/{id?}");
-
-app.MapFallbackToFile("index.html"); ;
+app.MapCarter();
+app.MapFallbackToFile("index.html");
 
 app.Run();

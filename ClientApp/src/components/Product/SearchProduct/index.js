@@ -1,8 +1,8 @@
 ﻿import { Col, FormGroup, Row } from "reactstrap";
 import Autosuggest from 'react-autosuggest';
 import { useContext, useEffect, useState } from "react";
-import SaleContext from '../../../../context/Sale'
-import ProductContext from "../../../../context/Product";
+import SaleContext from './../../../context/Sale'
+import ProductContext from "./../../../context/Product";
 import { useLocation } from "react-router-dom";
 
 const SearchProduct = () => {

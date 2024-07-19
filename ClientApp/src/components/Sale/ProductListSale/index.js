@@ -2,7 +2,7 @@ import { Col, Row ,Table } from "reactstrap";
 import ProductListItem from "../ProductListItemSale"
 import React, { useContext } from 'react'
 
-import SaleContext from "../../../../context/Sale"
+import SaleContext from "./../../../context/Sale";
 
 const ProductsGrid = () => {
 

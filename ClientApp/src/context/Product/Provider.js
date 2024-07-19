@@ -1,19 +1,22 @@
 import { useState, useEffect } from "react"
-import ProductContext from "../Product"
+import ProductContext from "./../../context/Product"
 import {Button } from "reactstrap"
 import Swal from 'sweetalert2'
 
 const ProductProvider = ({children}) => {
 
     const modelProduct = {
-        idProducto :0,
-        codigo :"",
+        id : undefined,
+        codigo :0,
+        codigoBarra :"",
         marca :"",
         descripcion :"",
-        idCategoria :0,
+        idCategoria :"",
         stock :0,
-        precio: 0,
-        esActivo: true
+        precioCompra: 0,
+        precioVenta: 0,
+        esActivo: true,
+        idTipoProducto: ""
     }
     const [product, setProduct] = useState(modelProduct);
     const [pending, setPending] = useState(true);
@@ -43,8 +46,8 @@ const ProductProvider = ({children}) => {
 
     //para obtener la lista de sugerencias
     const onSuggestionsFetchRequestedProduct = ({ value }) => {
-
-        const api = fetch("api/venta/Productos/" + value)
+        console.log(value);
+        const api = fetch("http://localhost:5145/api/products/getbydescription/{description}?description=" + value)
             .then((response) => {
                 return response.ok ? response.json() : Promise.reject(response);
             })
@@ -79,21 +82,25 @@ const ProductProvider = ({children}) => {
     };
 
     const getCategories = async () => {
-        let response = await fetch("api/categoria/Lista");
+        let response = await fetch("http://localhost:5145/api/categories/getall");
         if (response.ok) {
             let data = await response.json()
-            setCategories(data)
+            setCategories(data.data)
         }
     }
 
     const getProductsList = async () => {
-        try{
-            let response = await fetch("api/producto/Lista");
+        try {
+
+            let response = await fetch("http://localhost:5145/api/products/getall");
 
             if (response.ok) {
                 let data = await response.json()
-                setProductsList(data)
-                setPending(false)
+                if (data.isSuccess) {
+                    console.log(data.data);
+                    setProductsList(data.data)
+                    setPending(false)
+                }
             }
         }catch(error){
             console.log(error)
@@ -101,7 +108,7 @@ const ProductProvider = ({children}) => {
     }
 
     const openEditModal = (data) => {
-        data? setProduct(data) : setProduct(modelProduct)
+        data.id != undefined? setProduct(data) : setProduct(modelProduct)
         setViewModal(true);
     }
 
@@ -123,8 +130,14 @@ const ProductProvider = ({children}) => {
             cancelButtonText: 'No, volver'
         }).then((result) => {
             if (result.isConfirmed) {
-
-                const response = fetch("api/producto/Eliminar/" + id, { method: "DELETE" })
+                console.log(id)
+                const response = fetch("http://localhost:5145/api/products/delete", {
+                     method: "DELETE",
+                     headers: {
+                        'Content-Type': 'application/json;charset=utf-8'
+                    },
+                    body: JSON.stringify(id)
+                })
                     .then(response => {
                         if (response.ok) {
 
@@ -139,7 +152,7 @@ const ProductProvider = ({children}) => {
                         else{
                             Swal.fire(
                                 'Error al eliminar.',
-                                'El producto no fue eliminado. Tiene ventas asociadas.',
+                                'El producto no fue eliminado.',
                                 'error'
                             )
                         }
@@ -186,7 +199,7 @@ const ProductProvider = ({children}) => {
         },
         {
             name: 'Categoria',
-            selector: row => row.idCategoriaNavigation,
+            selector: row => row.idCategoriaNavigation.descripcion,
             sortable: true,
             cell: row => (row.idCategoriaNavigation.descripcion)
         },
@@ -213,7 +226,7 @@ const ProductProvider = ({children}) => {
                     </Button>
 
                     <Button color="danger" size="sm"
-                         onClick={() => deleteProduct(row.idProducto)}
+                         onClick={() => deleteProduct(row.id)}
                     >
                         <i className="fas fa-trash-alt"></i>
                     </Button>
@@ -225,7 +238,7 @@ const ProductProvider = ({children}) => {
     const columnsStock = [
         {
             name: 'Codigo',
-            selector: row => row.idProducto,
+            selector: row => row.id,
             sortable: true,
         },
         {
@@ -244,7 +257,7 @@ const ProductProvider = ({children}) => {
                 <>
 
                     <Button color="danger" size="sm"
-                         onClick={() => deleteProduct(row.idProducto)}
+                         onClick={() => deleteProduct(row.id)}
                     >
                         <i className="fas fa-trash-alt"></i>
                     </Button>
@@ -256,15 +269,20 @@ const ProductProvider = ({children}) => {
     const handleChange = (e) => {
 
         let value;
-
+        console.log(e.target);
         if (e.target.name == "idCategoria") {
-            value = e.target.value
+            value = e.target.value;
         } else if (e.target.name == "esActivo") {
-            value = (e.target.value == "true" ? true : false)
+            value = (e.target.value == "true" ? true : false);
+        } else if (e.target.name == "idTipoProducto") {
+            value = e.target.value;
+        } else if (e.target.name == "precioVenta") {
+            value = Number(e.target.value);
+        } else if (e.target.name == "stock") {
+            value = Number(e.target.value);
         } else {
             value = e.target.value;
         }
-
         setProduct({
             ...product,
             [e.target.name]: value
@@ -278,8 +296,9 @@ const ProductProvider = ({children}) => {
         delete product.idCategoriaNavigation;
 
         let response;
-        if (product.idProducto == 0) {
-            response = await fetch("api/producto/Guardar", {
+        console.log(product);
+        if (product.id == undefined) {
+            response = await fetch("http://localhost:5145/api/products/add", {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json;charset=utf-8'
@@ -288,7 +307,7 @@ const ProductProvider = ({children}) => {
             })
 
         } else {
-            response = await fetch("api/producto/Editar", {
+            response = await fetch("http://localhost:5145/api/products/update", {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json;charset=utf-8'
@@ -296,6 +315,7 @@ const ProductProvider = ({children}) => {
                 body: JSON.stringify(product)
             })
         }
+        console.log(response);
 
         if (response.ok) {
             await getProductsList();
@@ -339,7 +359,7 @@ const ProductProvider = ({children}) => {
                     )
                 } else {
                     let item = {
-                        idProducto: suggestion.idProducto,
+                        id: suggestion.id,
                         descripcion: suggestion.marca + " " + suggestion.descripcion,
                         cantidad: parseInt(inputValue),
                         precio: suggestion.precioCompra,

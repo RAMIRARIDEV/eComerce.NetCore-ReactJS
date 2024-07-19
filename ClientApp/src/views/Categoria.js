@@ -4,7 +4,7 @@ import { Card, CardBody, CardHeader, Button, Modal, ModalHeader, ModalBody, Labe
 import Swal from 'sweetalert2'
 
 const modeloCategoria = {
-    idCategoria:0,
+    id:"",
     descripcion: "",
     esActivo: true
 }
@@ -26,11 +26,12 @@ const Categoria = () => {
     }
 
     const obtenerCategorias = async () => {
-        let response = await fetch("api/categoria/Lista");
-
+        let response = await fetch("http://localhost:5145/api/categories/getall");
+        console.log(response);
         if (response.ok) {
             let data = await response.json()
-            setCategorias(data)
+            console.log(data.data)
+            setCategorias(data.data)
             setPendiente(false)
         }
     }
@@ -113,8 +114,9 @@ const Categoria = () => {
     const guardarCambios = async () => {
 
         let response;
-        if (categoria.idCategoria == 0) {
-            response = await fetch("api/categoria/Guardar", {
+        console.log(categoria);
+        if (categoria.id == 0) {
+            response = await fetch("http://localhost:5145/api/categories/add", {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json;charset=utf-8'
@@ -123,7 +125,7 @@ const Categoria = () => {
             })
            
         } else {
-            response = await fetch("api/categoria/Editar", {
+            response = await fetch("http://localhost:5145/api/categories/update", {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json;charset=utf-8'
@@ -158,7 +160,7 @@ const Categoria = () => {
         }).then((result) => {
             if (result.isConfirmed) {
 
-                const response = fetch("api/categoria/Eliminar/" + id, { method: "DELETE" })
+                const response = fetch("http://localhost:5145/api/categoria/delete/" + id, { method: "DELETE" })
                     .then( response => {
                         if (response.ok) {
 

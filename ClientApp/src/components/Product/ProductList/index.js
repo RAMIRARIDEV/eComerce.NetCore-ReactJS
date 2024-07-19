@@ -1,6 +1,6 @@
 import DataTable from "react-data-table-component";
 import { useContext, useEffect, useState, useMemo } from 'react';
-import ProductContext from "../../../../context/Product";
+import ProductContext from "./../../../context/Product";
 import { useLocation } from "react-router-dom";
 
 const ProducList = () => {

@@ -1,5 +1,5 @@
 import { Button, td ,Table } from "reactstrap";
-import SaleContext from '../../../../context/Sale'
+import SaleContext from './../../../context/Sale'
 import {useContext} from "react"
 
 const ProductListItem = ({ idProducto, descripcion, cantidad, precio, total }) => {

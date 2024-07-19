@@ -1,9 +1,9 @@
 ﻿import { Card, CardBody} from "reactstrap"
 import SectionTitle from './Shared/SectionTitle'
-import ProducList from "./Product/components/ProductList";
+import ProducList from "./../components/Product/ProductList";
 import ProductProvider from "../context/Product/Provider";
-import ModalProduct from "./Product/components/ModalProduct";
-import BtnShowModalProduct from "./Product/components/BtnShowModalProduct";
+import ModalProduct from "./../components/Product/ModalProduct";
+import BtnShowModalProduct from "./../components/Product/BtnShowModalProduct";
 
 const Producto = () => {
 

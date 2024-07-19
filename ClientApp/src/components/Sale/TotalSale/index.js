@@ -1,7 +1,7 @@
 
 import { useContext } from "react";
-import { Col, Row, Table, InputGroup ,InputGroupText, Input, option} from "reactstrap";
-import SaleContext from "../../../../context/Sale"
+import { Col, Row, Table, InputGroup, InputGroupText, Input, option } from "reactstrap";
+import SaleContext from "./../../../context/Sale"
 
 
 const TotalSale = () => {

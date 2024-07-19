@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { Button, Modal, ModalHeader, ModalBody, Label, Input, FormGroup, ModalFooter, Row, Col } from "reactstrap"
-import ProductContext from "../../../../context/Product";
 
+import ProductContext from "./../../../context/Product";
 
 const ModalProduct = () => {
 
@@ -9,15 +9,16 @@ const ModalProduct = () => {
 
     return (
         <Modal isOpen={viewModal}>
-            <ModalHeader>
+            <ModalHeader >
                 Detalle Producto
             </ModalHeader>
             <ModalBody>
+
                 <Row>
                     <Col sm={6}>
                         <FormGroup>
-                            <Label>Codigo</Label>
-                            <Input bsSize="sm" name="codigo" onChange={handleChange} value={product.codigo} />
+                            <Label>Codigo de barra</Label>
+                            <Input bsSize="sm" name="codigoBarra" onChange={handleChange} value={product.codigoBarra} />
                         </FormGroup>
                     </Col>
                     <Col sm={6}>
@@ -42,7 +43,7 @@ const ModalProduct = () => {
                                 {
                                     categories.map((item) => {
                                         if (item.esActivo)
-                                            return (<option key={item.idCategoria} value={item.idCategoria}>{item.descripcion}</option>)
+                                            return (<option key={item.id} value={item.id}>{item.descripcion}</option>)
                                     })
                                 }
                             </Input>
@@ -59,17 +60,26 @@ const ModalProduct = () => {
                     <Col sm={6}>
                         <FormGroup>
                             <Label>Precio</Label>
-                            <Input bsSize="sm" name="precio" onChange={handleChange} value={product.precio} type="number" />
+                            <Input bsSize="sm" name="precioVenta" onChange={handleChange} value={product.precioVenta} type="number" />
                         </FormGroup>
                     </Col>
                 </Row>
                 <Row>
-                    <Col sm="6" >
+                <Col sm="6" >
                         <FormGroup>
                             <Label>Estado</Label>
                             <Input bsSize="sm" type={"select"} name="esActivo" onChange={handleChange} value={product.esActivo} >
                                 <option value={true}>Activo</option>
                                 <option value={false}>No Activo</option>
+                            </Input>
+                        </FormGroup>
+                    </Col>
+                    <Col sm="6" >
+                        <FormGroup>
+                            <Label>Pesable/Unidad</Label>
+                            <Input bsSize="sm" type={"select"} name="idTipoProducto" onChange={handleChange} value={product.idTipoProducto} >
+                                <option value={"BAAECFF4-F7D2-4CFD-83A3-022EE1594938"}>Peso</option>
+                                <option value={"4d25b694-ed3d-4d74-ae81-cf752a76e517"}>Unidad</option>
                             </Input>
                         </FormGroup>
                     </Col>

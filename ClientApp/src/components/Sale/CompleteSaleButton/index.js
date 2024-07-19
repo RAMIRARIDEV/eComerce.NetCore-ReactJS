@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import SaleContext from "../../../../context/Sale"
+import SaleContext from "../../../context/Sale"
 import { Button} from "reactstrap";
 
 const SaleSubmit = () => {
